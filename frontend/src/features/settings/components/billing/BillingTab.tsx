@@ -18,13 +18,13 @@ interface ProfileTypeOption {
   comingSoon?: boolean;
 }
 
-function ProfileTypeSelect({ 
-  value, 
-  onChange, 
-  hasIndividualProfile, 
-  theme 
- }: { 
-  value: BillingProfileType; 
+function ProfileTypeSelect({
+  value,
+  onChange,
+  hasIndividualProfile,
+  theme
+}: {
+  value: BillingProfileType;
   onChange: (val: BillingProfileType) => void;
   hasIndividualProfile: boolean;
   theme: string;
@@ -33,20 +33,20 @@ function ProfileTypeSelect({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const options: ProfileTypeOption[] = [
-    { 
-      value: 'individual', 
-      label: `Individual${hasIndividualProfile ? ' (Already Created)' : ''}`, 
-      disabled: hasIndividualProfile 
+    {
+      value: 'individual',
+      label: `Individual${hasIndividualProfile ? ' (Already Created)' : ''}`,
+      disabled: hasIndividualProfile
     },
-    { 
-      value: 'self-employed', 
-      label: 'Self-Employed', 
+    {
+      value: 'self-employed',
+      label: 'Self-Employed',
       disabled: true,
       comingSoon: true
     },
-    { 
-      value: 'organization', 
-      label: 'Organization', 
+    {
+      value: 'organization',
+      label: 'Organization',
       disabled: true,
       comingSoon: true
     }
@@ -69,24 +69,21 @@ function ProfileTypeSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none transition-all text-[14px] ${
-          theme === 'dark'
-            ? 'bg-white/[0.08] border-white/15 text-[#f5efe5] focus:border-[#c9983a]/30'
-            : 'bg-white/[0.15] border-white/25 text-[#2d2820] focus:border-[#c9983a]/30'
-        }`}
+        className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none transition-all text-[14px] ${theme === 'dark'
+          ? 'bg-white/[0.08] border-white/15 text-[#f5efe5] focus:border-[#c9983a]/30'
+          : 'bg-white/[0.15] border-white/25 text-[#2d2820] focus:border-[#c9983a]/30'
+          }`}
       >
         <span className="flex-1 text-left truncate">{selectedOption.label}</span>
-        <ChevronDown className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} ${
-          theme === 'dark' ? 'text-[#b8a898]' : 'text-[#7a6b5a]'
-        }`} />
+        <ChevronDown className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} ${theme === 'dark' ? 'text-[#b8a898]' : 'text-[#7a6b5a]'
+          }`} />
       </button>
 
       {isOpen && (
-        <div className={`absolute z-[110] mt-2 w-full min-w-[240px] rounded-[14px] border shadow-[0_10px_30px_rgba(0,0,0,0.12)] overflow-hidden  animate-in fade-in slide-in-from-top-2 duration-200 ${
-          theme === 'dark'
+        <div className={`absolute z-[110] mt-2 w-full min-w-[240px] rounded-[14px] border shadow-[0_10px_30px_rgba(0,0,0,0.12)] overflow-hidden backdrop-blur-[40px] animate-in fade-in slide-in-from-top-2 duration-200 ${theme === 'dark'
             ? 'bg-[#2d2820]/[0.95] border-white/10'
-            : 'bg-white/[0.95] border-white/40'
-        }`}>
+          : 'bg-[#d5cabc] border-[#c9983a]/30'
+          }`}>
           <div className="py-1">
             {options.map((option) => (
               <button
@@ -99,23 +96,21 @@ function ProfileTypeSelect({
                     setIsOpen(false);
                   }
                 }}
-                className={`w-full px-4 py-3 text-left text-[14px] transition-all flex items-center justify-between group ${
-                  value === option.value
-                    ? theme === 'dark' 
-                      ? 'bg-[#c9983a]/20 text-[#c9983a]' 
-                      : 'bg-[#c9983a]/10 text-[#a67c2e]'
-                    : theme === 'dark' 
-                      ? 'text-[#f5efe5] hover:bg-white/5' 
-                      : 'text-[#2d2820] hover:bg-black/5'
-                } ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`w-full px-4 py-3 text-left text-[14px] transition-all flex items-center justify-between group ${value === option.value
+                  ? theme === 'dark'
+                    ? 'bg-[#c9983a]/20 text-[#c9983a]'
+                    : 'bg-[#c9983a]/10 text-[#a67c2e]'
+                  : theme === 'dark'
+                    ? 'text-[#f5efe5] hover:bg-white/5'
+                    : 'text-[#2d2820] hover:bg-[#c9983a]/15'
+                  } ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 <span className="truncate mr-2">
                   {option.label}
                 </span>
                 {option.comingSoon && (
-                  <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
-                    theme === 'dark' ? 'bg-white/10 text-white/50' : 'bg-black/5 text-black/40'
-                  }`}>
+                  <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${theme === 'dark' ? 'bg-white/10 text-white/50' : 'bg-[#c9983a]/15 text-[#a67c2e]'
+                    }`}>
                     Soon
                   </span>
                 )}
@@ -340,8 +335,8 @@ export function BillingTab() {
 
         {/* Profile Header */}
         <div className={`backdrop-blur-[40px] rounded-[24px] border shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-8 transition-colors ${theme === 'dark'
-            ? 'bg-[#2d2820]/[0.4] border-white/10'
-            : 'bg-white/[0.12] border-white/20'
+          ? 'bg-[#2d2820]/[0.4] border-white/10'
+          : 'bg-white/[0.12] border-white/20'
           }`}>
           <div className="flex items-start justify-between mb-6">
             <div>
@@ -371,10 +366,10 @@ export function BillingTab() {
             <button
               onClick={() => setDetailTab('general')}
               className={`px-5 py-2.5 rounded-[12px] text-[14px] font-medium transition-all ${detailTab === 'general'
-                  ? 'bg-[#a2792c] text-white shadow-[0_4px_16px_rgba(162,121,44,0.25)]'
-                  : theme === 'dark'
-                    ? 'text-[#d4c5b0] hover:bg-white/[0.1]'
-                    : 'text-[#6b5d4d] hover:bg-white/[0.1]'
+                ? 'bg-[#a2792c] text-white shadow-[0_4px_16px_rgba(162,121,44,0.25)]'
+                : theme === 'dark'
+                  ? 'text-[#d4c5b0] hover:bg-white/[0.1]'
+                  : 'text-[#6b5d4d] hover:bg-white/[0.1]'
                 }`}
             >
               General Information
@@ -382,10 +377,10 @@ export function BillingTab() {
             <button
               onClick={() => setDetailTab('payment')}
               className={`px-5 py-2.5 rounded-[12px] text-[14px] font-medium transition-all ${detailTab === 'payment'
-                  ? 'bg-[#a2792c] text-white shadow-[0_4px_16px_rgba(162,121,44,0.25)]'
-                  : theme === 'dark'
-                    ? 'text-[#d4c5b0] hover:bg-white/[0.1]'
-                    : 'text-[#6b5d4d] hover:bg-white/[0.1]'
+                ? 'bg-[#a2792c] text-white shadow-[0_4px_16px_rgba(162,121,44,0.25)]'
+                : theme === 'dark'
+                  ? 'text-[#d4c5b0] hover:bg-white/[0.1]'
+                  : 'text-[#6b5d4d] hover:bg-white/[0.1]'
                 }`}
             >
               Payment Methods
@@ -393,10 +388,10 @@ export function BillingTab() {
             <button
               onClick={() => setDetailTab('invoices')}
               className={`px-5 py-2.5 rounded-[12px] text-[14px] font-medium transition-all ${detailTab === 'invoices'
-                  ? 'bg-[#a2792c] text-white shadow-[0_4px_16px_rgba(162,121,44,0.25)]'
-                  : theme === 'dark'
-                    ? 'text-[#d4c5b0] hover:bg-white/[0.1]'
-                    : 'text-[#6b5d4d] hover:bg-white/[0.1]'
+                ? 'bg-[#a2792c] text-white shadow-[0_4px_16px_rgba(162,121,44,0.25)]'
+                : theme === 'dark'
+                  ? 'text-[#d4c5b0] hover:bg-white/[0.1]'
+                  : 'text-[#6b5d4d] hover:bg-white/[0.1]'
                 }`}
             >
               Invoices
@@ -407,8 +402,8 @@ export function BillingTab() {
         {/* General Information Tab */}
         {detailTab === 'general' && (
           <div className={`backdrop-blur-[40px] rounded-[24px] border shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-8 transition-colors ${theme === 'dark'
-              ? 'bg-[#2d2820]/[0.4] border-white/10'
-              : 'bg-white/[0.12] border-white/20'
+            ? 'bg-[#2d2820]/[0.4] border-white/10'
+            : 'bg-white/[0.12] border-white/20'
             }`}>
             <div className="flex items-center justify-between mb-6">
               <h3 className={`text-[20px] font-bold transition-colors ${theme === 'dark' ? 'text-[#f5efe5]' : 'text-[#2d2820]'
@@ -417,8 +412,8 @@ export function BillingTab() {
               {/* Status Badge */}
               {selectedProfile.status === 'missing-verification' && kycStatus === null && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-[12px] backdrop-blur-[20px] border transition-colors ${theme === 'dark'
-                    ? 'bg-gradient-to-br from-[#f59e0b]/20 to-[#d97706]/15 border-[#f59e0b]/40'
-                    : 'bg-gradient-to-br from-[#f59e0b]/15 to-[#d97706]/10 border-[#f59e0b]/35'
+                  ? 'bg-gradient-to-br from-[#f59e0b]/20 to-[#d97706]/15 border-[#f59e0b]/40'
+                  : 'bg-gradient-to-br from-[#f59e0b]/15 to-[#d97706]/10 border-[#f59e0b]/35'
                   }`}>
                   <AlertCircle className={`w-4 h-4 ${theme === 'dark' ? 'text-[#f59e0b]' : 'text-[#d97706]'}`} />
                   <span className={`text-[13px] font-medium transition-colors ${theme === 'dark' ? 'text-[#f59e0b]' : 'text-[#d97706]'
@@ -428,8 +423,8 @@ export function BillingTab() {
 
               {kycStatus === 'in_review' && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-[12px] backdrop-blur-[20px] border transition-colors ${theme === 'dark'
-                    ? 'bg-gradient-to-br from-[#c9983a]/20 to-[#d4af37]/15 border-[#c9983a]/40'
-                    : 'bg-gradient-to-br from-[#c9983a]/15 to-[#d4af37]/10 border-[#c9983a]/35'
+                  ? 'bg-gradient-to-br from-[#c9983a]/20 to-[#d4af37]/15 border-[#c9983a]/40'
+                  : 'bg-gradient-to-br from-[#c9983a]/15 to-[#d4af37]/10 border-[#c9983a]/35'
                   }`}>
                   <MessageSquare className={`w-4 h-4 ${theme === 'dark' ? 'text-[#c9983a]' : 'text-[#a67c2e]'}`} />
                   <span className={`text-[13px] font-medium transition-colors ${theme === 'dark' ? 'text-[#c9983a]' : 'text-[#a67c2e]'
@@ -439,8 +434,8 @@ export function BillingTab() {
 
               {kycStatus === 'rejected' && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-[12px] backdrop-blur-[20px] border transition-colors ${theme === 'dark'
-                    ? 'bg-gradient-to-br from-[#ef4444]/20 to-[#dc2626]/15 border-[#ef4444]/50'
-                    : 'bg-gradient-to-br from-[#ef4444]/15 to-[#dc2626]/10 border-[#ef4444]/50'
+                  ? 'bg-gradient-to-br from-[#ef4444]/20 to-[#dc2626]/15 border-[#ef4444]/50'
+                  : 'bg-gradient-to-br from-[#ef4444]/15 to-[#dc2626]/10 border-[#ef4444]/50'
                   }`}>
                   <AlertCircle className={`w-4 h-4 ${theme === 'dark' ? 'text-[#ef4444]' : 'text-[#dc2626]'}`} />
                   <span className={`text-[13px] font-medium transition-colors ${theme === 'dark' ? 'text-[#ef4444]' : 'text-[#dc2626]'
@@ -450,8 +445,8 @@ export function BillingTab() {
 
               {selectedProfile.status === 'limit-reached' && (
                 <div className={`flex items-center gap-2 px-4 py-2 rounded-[12px] backdrop-blur-[20px] border transition-colors ${theme === 'dark'
-                    ? 'bg-gradient-to-br from-[#ef4444]/20 to-[#dc2626]/15 border-[#ef4444]/40'
-                    : 'bg-gradient-to-br from-[#ef4444]/15 to-[#dc2626]/10 border-[#ef4444]/35'
+                  ? 'bg-gradient-to-br from-[#ef4444]/20 to-[#dc2626]/15 border-[#ef4444]/40'
+                  : 'bg-gradient-to-br from-[#ef4444]/15 to-[#dc2626]/10 border-[#ef4444]/35'
                   }`}>
                   <AlertCircle className={`w-4 h-4 ${theme === 'dark' ? 'text-[#ef4444]' : 'text-[#dc2626]'}`} />
                   <span className={`text-[13px] font-medium transition-colors ${theme === 'dark' ? 'text-[#ef4444]' : 'text-[#dc2626]'
@@ -473,8 +468,8 @@ export function BillingTab() {
                   placeholder={selectedProfile.status === 'verified' ? '' : 'Will be filled after KYC'}
                   readOnly
                   className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none text-[14px] transition-colors ${theme === 'dark'
-                      ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
-                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
+                    ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
+                    : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
                     }`}
                 />
               </div>
@@ -491,8 +486,8 @@ export function BillingTab() {
                   placeholder={selectedProfile.status === 'verified' ? '' : 'Will be filled after KYC'}
                   readOnly
                   className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none text-[14px] transition-colors ${theme === 'dark'
-                      ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
-                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
+                    ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
+                    : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
                     }`}
                 />
               </div>
@@ -507,8 +502,8 @@ export function BillingTab() {
                   placeholder={selectedProfile.status === 'verified' ? '' : 'Will be filled after KYC'}
                   readOnly
                   className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none text-[14px] transition-colors ${theme === 'dark'
-                      ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
-                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
+                    ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
+                    : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
                     }`}
                 />
               </div>
@@ -523,8 +518,8 @@ export function BillingTab() {
                   placeholder={selectedProfile.status === 'verified' ? '' : 'Will be filled after KYC'}
                   readOnly
                   className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none text-[14px] transition-colors ${theme === 'dark'
-                      ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
-                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
+                    ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
+                    : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
                     }`}
                 />
               </div>
@@ -539,8 +534,8 @@ export function BillingTab() {
                   placeholder={selectedProfile.status === 'verified' ? '' : 'Will be filled after KYC'}
                   readOnly
                   className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none text-[14px] transition-colors ${theme === 'dark'
-                      ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
-                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
+                    ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
+                    : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
                     }`}
                 />
               </div>
@@ -555,8 +550,8 @@ export function BillingTab() {
                   placeholder={selectedProfile.status === 'verified' ? '' : 'Will be filled after KYC'}
                   readOnly
                   className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none text-[14px] transition-colors ${theme === 'dark'
-                      ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
-                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
+                    ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
+                    : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
                     }`}
                 />
               </div>
@@ -573,8 +568,8 @@ export function BillingTab() {
                   placeholder={selectedProfile.status === 'verified' ? '' : 'Will be filled after KYC'}
                   readOnly
                   className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none text-[14px] transition-colors ${theme === 'dark'
-                      ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
-                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
+                    ? 'bg-[#3d342c]/[0.4] border-white/15 text-[#f5efe5] placeholder-[#8a7e70]/50'
+                    : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a]/50'
                     }`}
                 />
               </div>
@@ -610,8 +605,8 @@ export function BillingTab() {
             {/* In Review Message */}
             {kycStatus === 'in_review' && (
               <div className={`mt-8 p-4 rounded-[14px] backdrop-blur-[30px] border transition-colors ${theme === 'dark'
-                  ? 'bg-gradient-to-br from-[#2d2820]/[0.4] to-[#3d342c]/[0.3] border-[#c9983a]/30'
-                  : 'bg-gradient-to-br from-white/[0.12] to-white/[0.08] border-[#c9983a]/30'
+                ? 'bg-gradient-to-br from-[#2d2820]/[0.4] to-[#3d342c]/[0.3] border-[#c9983a]/30'
+                : 'bg-gradient-to-br from-white/[0.12] to-white/[0.08] border-[#c9983a]/30'
                 }`}>
                 <p className={`text-[14px] transition-colors ${theme === 'dark' ? 'text-[#b8a898]' : 'text-[#7a6b5a]'
                   }`}>
@@ -623,8 +618,8 @@ export function BillingTab() {
             {/* Rejected Message */}
             {kycStatus === 'rejected' && (
               <div className={`mt-8 p-4 rounded-[14px] backdrop-blur-[30px] border transition-colors ${theme === 'dark'
-                  ? 'bg-gradient-to-br from-[#2d2820]/[0.4] to-[#3d342c]/[0.3] border-[#ef4444]/50'
-                  : 'bg-gradient-to-br from-white/[0.12] to-white/[0.08] border-[#ef4444]/50'
+                ? 'bg-gradient-to-br from-[#2d2820]/[0.4] to-[#3d342c]/[0.3] border-[#ef4444]/50'
+                : 'bg-gradient-to-br from-white/[0.12] to-white/[0.08] border-[#ef4444]/50'
                 }`}>
                 <p className={`text-[14px] transition-colors ${theme === 'dark' ? 'text-[#b8a898]' : 'text-[#7a6b5a]'
                   }`}>
@@ -697,8 +692,8 @@ export function BillingTab() {
         </div>
       ) : (
         <div className={`backdrop-blur-[40px] rounded-[24px] border shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-12 text-center transition-colors ${theme === 'dark'
-            ? 'bg-[#2d2820]/[0.4] border-white/10'
-            : 'bg-white/[0.12] border-white/20'
+          ? 'bg-[#2d2820]/[0.4] border-white/10'
+          : 'bg-white/[0.12] border-white/20'
           }`}>
           <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center ${theme === 'dark' ? 'bg-white/[0.08]' : 'bg-white/[0.15]'
             }`}>
@@ -720,8 +715,8 @@ export function BillingTab() {
       {showModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className={`relative w-full max-w-md rounded-[24px] border shadow-[0_20px_60px_rgba(0,0,0,0.15)] p-8 backdrop-blur-[40px] ${theme === 'dark'
-              ? 'bg-gradient-to-br from-[#2d2820]/[0.4] via-[#3d342c]/[0.4] to-[#2d2820]/[0.4] border-white/10'
-              : 'bg-gradient-to-br from-white/[0.12] via-white/[0.15] to-white/[0.12] border-white/20'
+            ? 'bg-gradient-to-br from-[#2d2820]/[0.4] via-[#3d342c]/[0.4] to-[#2d2820]/[0.4] border-white/10'
+            : 'bg-gradient-to-br from-white/[0.12] via-white/[0.15] to-white/[0.12] border-white/20'
             }`}>
             {/* Golden Glow Effects */}
             <div className="absolute inset-0 opacity-15 pointer-events-none">
@@ -734,8 +729,8 @@ export function BillingTab() {
                 <h3 className={`text-[20px] font-bold transition-colors ${theme === 'dark' ? 'text-[#f5efe5]' : 'text-[#2d2820]'
                   }`}>Create Billing Profile</h3>
                 <button onClick={() => setShowModal(false)} className={`w-8 h-8 rounded-[10px] backdrop-blur-[20px] border flex items-center justify-center transition-all ${theme === 'dark'
-                    ? 'bg-white/[0.1] hover:bg-white/[0.15] border-white/20'
-                    : 'bg-white/[0.3] hover:bg-white/[0.5] border-white/40'
+                  ? 'bg-white/[0.1] hover:bg-white/[0.15] border-white/20'
+                  : 'bg-white/[0.3] hover:bg-white/[0.5] border-white/40'
                   }`}>
                   <X className={`w-4 h-4 transition-colors ${theme === 'dark' ? 'text-[#b8a898]' : 'text-[#7a6b5a]'
                     }`} />
@@ -752,8 +747,8 @@ export function BillingTab() {
                     onChange={(e) => setProfileName(e.target.value)}
                     placeholder="Enter profile name"
                     className={`w-full px-4 py-3 rounded-[14px] backdrop-blur-[30px] border focus:outline-none focus:border-[#c9983a]/30 transition-all text-[14px] ${theme === 'dark'
-                        ? 'bg-white/[0.08] border-white/15 text-[#f5efe5] placeholder-[#8a7e70] focus:bg-white/[0.12]'
-                        : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a] focus:bg-white/[0.2]'
+                      ? 'bg-white/[0.08] border-white/15 text-[#f5efe5] placeholder-[#8a7e70] focus:bg-white/[0.12]'
+                      : 'bg-white/[0.15] border-white/25 text-[#2d2820] placeholder-[#7a6b5a] focus:bg-white/[0.2]'
                       }`}
                   />
                 </div>
@@ -787,8 +782,8 @@ export function BillingTab() {
                 <button
                   onClick={() => setShowModal(false)}
                   className={`flex-1 px-6 py-3 rounded-[12px] backdrop-blur-[30px] border font-medium text-[14px] transition-all ${theme === 'dark'
-                      ? 'bg-white/[0.1] border-white/20 text-[#d4c5b0] hover:bg-white/[0.15]'
-                      : 'bg-white/[0.2] border-white/30 text-[#2d2820] hover:bg-white/[0.25]'
+                    ? 'bg-white/[0.1] border-white/20 text-[#d4c5b0] hover:bg-white/[0.15]'
+                    : 'bg-white/[0.2] border-white/30 text-[#2d2820] hover:bg-white/[0.25]'
                     }`}
                 >
                   Cancel
