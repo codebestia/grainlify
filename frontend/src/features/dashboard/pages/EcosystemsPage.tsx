@@ -387,14 +387,14 @@ export function EcosystemsPage({ onEcosystemClick }: EcosystemsPageProps) {
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
 
-            <button
+            {/* <button
                 onClick={() => setShowAddModal(true)}
                 className={`mt-6 block mx-auto text-sm font-medium underline opacity-60 hover:opacity-100 transition-opacity ${
                   theme === 'dark' ? 'text-[#d4d4d4]' : 'text-[#7a6b5a]'
                 }`}
             >
                 Open Admin Modal (Dev Only)
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

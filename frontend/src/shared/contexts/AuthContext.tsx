@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // DEV BYPASS: Immediately set a mock user if no backend is available
     // Remove this block when backend connection is restored
     // eslint-disable-next-line no-constant-condition
-    if (true) { 
+    /* if (true) { 
       console.log('AuthContext - DEV BYPASS: Setting mock user');
       // Use localStorage directly to avoid triggering the 'patchwork-auth-token' event listener
       // which would cause an infinite loop since it calls checkAuth()
@@ -55,10 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUserId('dev-user-id');
       setIsLoading(false);
       return;
-    }
+    } */
 
     // Unreachable code due to DEV BYPASS above. Kept for future reference.
-    /*
+    
     const token = getAuthToken();
       console.log('AuthContext - Checking authentication on mount');
       console.log('AuthContext - Token found:', token ? 'Yes' : 'No');
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setIsLoading(false);
       console.log('AuthContext - Loading complete');
-    */
+    
   };
 
   // Check for existing token on mount
