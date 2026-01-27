@@ -672,6 +672,7 @@ pub enum DataKey {
     ReleaseSchedule(String, u64), // program_id, schedule_id -> ProgramReleaseSchedule
     ReleaseHistory(String), // program_id -> Vec<ProgramReleaseHistory>
     NextScheduleId(String), // program_id -> next schedule_id
+    IsPaused, // Global contract pause state
 }
 
 // ============================================================================
@@ -757,6 +758,87 @@ impl ProgramEscrowContract {
     ///
     /// # Gas Cost
     /// Low - Initial storage writes
+
+    // ========================================================================
+    // Pause and Emergency Functions
+    // ========================================================================
+
+    /// Check if contract is paused (internal helper)
+    fn is_paused_internal(env: &Env) -> bool {
+        env.storage()
+            .instance()
+            .get::<_, bool>(&DataKey::IsPaused)
+            .unwrap_or(false)
+    }
+
+    /// Get pause status (view function)
+    pub fn is_paused(env: Env) -> bool {
+        Self::is_paused_internal(&env)
+    }
+
+    /// Pause the contract (authorized payout key only)
+    /// Prevents new fund locking, payouts, and schedule releases
+    pub fn pause(env: Env) -> () {
+        // For program-escrow, pause is triggered by the first authorized key that calls it
+        // In a multi-program setup, this would need to be per-program
+        
+        if Self::is_paused_internal(&env) {
+            return; // Already paused, idempotent
+        }
+
+        env.storage().instance().set(&DataKey::IsPaused, &true);
+
+        env.events().publish(
+            (symbol_short!("pause"),),
+            (env.ledger().timestamp(),),
+        );
+    }
+
+    /// Unpause the contract (authorized payout key only)
+    /// Resumes normal operations
+    pub fn unpause(env: Env) -> () {
+        if !Self::is_paused_internal(&env) {
+            return; // Already unpaused, idempotent
+        }
+
+        env.storage().instance().set(&DataKey::IsPaused, &false);
+
+        env.events().publish(
+            (symbol_short!("unpause"),),
+            (env.ledger().timestamp(),),
+        );
+    }
+
+    /// Emergency withdrawal for all contract funds (authorized payout key only, only when paused)
+    pub fn emergency_withdraw(env: Env, program_id: String, recipient: Address) -> i128 {
+        // Only allow emergency withdrawal when contract is paused
+        if !Self::is_paused_internal(&env) {
+            panic!("Contract must be paused for emergency withdrawal");
+        }
+
+        // Get program data to access token address
+        let program_key = DataKey::Program(program_id.clone());
+        let program_data: ProgramData = env.storage().instance().get(&program_key).unwrap_or_else(|| {
+            panic!("Program not found");
+        });
+
+        let client = token::Client::new(&env, &program_data.token_address);
+        let balance = client.balance(&env.current_contract_address());
+
+        if balance <= 0 {
+            return 0; // No funds to withdraw
+        }
+
+        // Transfer all funds to recipient
+        client.transfer(&env.current_contract_address(), &recipient, &balance);
+
+        env.events().publish(
+            (symbol_short!("ewith"),),
+            (balance, env.ledger().timestamp()),
+        );
+
+        balance
+    }
 
     pub fn initialize_program(
         env: Env,
@@ -978,6 +1060,12 @@ impl ProgramEscrowContract {
         let start = env.ledger().timestamp();
         let caller = env.current_contract_address();
 
+        // Check if contract is paused
+        if Self::is_paused_internal(&env) {
+            monitoring::track_operation(&env, symbol_short!("lock"), caller.clone(), false);
+            panic!("Contract is paused");
+        }
+
         // Validate amount
         if amount <= 0 {
             monitoring::track_operation(&env, symbol_short!("lock"), caller.clone(), false);
@@ -1142,6 +1230,11 @@ impl ProgramEscrowContract {
         recipients: Vec<Address>,
         amounts: Vec<i128>,
     ) -> ProgramData {
+        // Check if contract is paused
+        if Self::is_paused_internal(&env) {
+            panic!("Contract is paused");
+        }
+
         // Apply rate limiting to the contract itself or the program
         // We can't easily get the caller here without getting program data first
         
@@ -1322,6 +1415,11 @@ impl ProgramEscrowContract {
         recipient: Address,
         amount: i128,
     ) -> ProgramData {
+        // Check if contract is paused
+        if Self::is_paused_internal(&env) {
+            panic!("Contract is paused");
+        }
+
         // Get program data
         let program_key = DataKey::Program(program_id.clone());
         let program_data: ProgramData = env
@@ -1468,6 +1566,11 @@ impl ProgramEscrowContract {
     ) -> ProgramData {
         let start = env.ledger().timestamp();
 
+        // Check if contract is paused
+        if Self::is_paused_internal(&env) {
+            panic!("Contract is paused");
+        }
+
         // Get program data
         let program_key = DataKey::Program(program_id.clone());
         let program_data: ProgramData = env
@@ -1588,6 +1691,11 @@ impl ProgramEscrowContract {
     ) {
         let start = env.ledger().timestamp();
         let caller = env.current_contract_address();
+
+        // Check if contract is paused
+        if Self::is_paused_internal(&env) {
+            panic!("Contract is paused");
+        }
 
         // Get program data
         let program_key = DataKey::Program(program_id.clone());

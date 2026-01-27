@@ -651,3 +651,92 @@ fn test_complete_bounty_workflow_lock_refund() {
     let depositor_balance = token_client.balance(&depositor);
     assert_eq!(depositor_balance, amount);
 }
+// ========================================================================
+// Pause Functionality Tests
+// ========================================================================
+
+#[test]
+fn test_pause_functionality() {
+    let (env, client, contract_id) = create_test_env();
+    env.mock_all_auths();
+
+    let admin = Address::generate(&env);
+    let depositor = Address::generate(&env);
+    let contributor = Address::generate(&env);
+
+    // Create and setup token
+    let (token_address, token_client, token_admin) = create_token_contract(&env, &admin);
+
+    // Initialize escrow
+    client.init(&admin, &token_address);
+
+    // Mint tokens
+    token_admin.mint(&admin, &5000_0000000);
+    token_client.approve(&admin, &contract_id, &5000_0000000, &1000);
+
+    // Initially not paused
+    assert_eq!(client.is_paused(), false);
+
+    // Pause contract
+    let pause_result = client.pause();
+    assert_eq!(pause_result, Ok(()));
+    assert_eq!(client.is_paused(), true);
+
+    // Try to lock funds while paused - should fail
+    let bounty_id = 1;
+    let amount = 1000_0000000;
+    let deadline = env.ledger().timestamp() + 1_000_000;
+
+    let lock_result = client.lock_funds(&depositor, &bounty_id, &amount, &deadline);
+    assert_eq!(lock_result, Err(crate::Error::ContractPaused));
+
+    // Unpause contract
+    let unpause_result = client.unpause();
+    assert_eq!(unpause_result, Ok(()));
+    assert_eq!(client.is_paused(), false);
+
+    // Now lock funds should work
+    let lock_result = client.lock_funds(&depositor, &bounty_id, &amount, &deadline);
+    assert_eq!(lock_result, Ok(()));
+}
+
+#[test]
+fn test_emergency_withdraw() {
+    let (env, client, contract_id) = create_test_env();
+    env.mock_all_auths();
+
+    let admin = Address::generate(&env);
+    let depositor = Address::generate(&env);
+    let emergency_recipient = Address::generate(&env);
+
+    // Create and setup token
+    let (token_address, token_client, token_admin) = create_token_contract(&env, &admin);
+
+    // Initialize escrow
+    client.init(&admin, &token_address);
+
+    // Mint and approve tokens
+    token_admin.mint(&admin, &10000_0000000);
+    token_client.approve(&admin, &contract_id, &10000_0000000, &1000);
+
+    // Lock some funds
+    let bounty_id = 1;
+    let amount = 5000_0000000;
+    let deadline = env.ledger().timestamp() + 1_000_000;
+    client.lock_funds(&depositor, &bounty_id, &amount, &deadline);
+
+    // Try emergency withdraw without pausing - should fail
+    let emergency_result = client.emergency_withdraw(&emergency_recipient);
+    assert_eq!(emergency_result, Err(crate::Error::Unauthorized));
+
+    // Pause contract
+    client.pause();
+
+    // Now emergency withdraw should work
+    let emergency_result = client.emergency_withdraw(&emergency_recipient);
+    assert_eq!(emergency_result, Ok(()));
+
+    // Verify recipient got the funds
+    let recipient_balance = token_client.balance(&emergency_recipient);
+    assert!(recipient_balance > 0); // Should have received funds
+}
